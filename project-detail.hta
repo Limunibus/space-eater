@@ -1,0 +1,390 @@
+<html>
+<head>
+    <title>ClipDedent - Project Details</title>
+    <HTA:APPLICATION
+        ID="ProjectDetail"
+        APPLICATIONNAME="ClipDedent"
+        BORDER="thick"
+        BORDERSTYLE="normal"
+        INNERBORDER="no"
+        CAPTION="yes"
+        MAXIMIZEBUTTON="yes"
+        MINIMIZEBUTTON="yes"
+        SHOWINTASKBAR="yes"
+        SINGLEINSTANCE="no"
+        SYSMENU="yes"
+        SCROLL="yes"
+        WINDOWSTATE="maximize"
+    />
+    <meta http-equiv="x-ua-compatible" content="IE=11">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f172a; color: #e2e8f0;
+            padding: 30px 40px; line-height: 1.7;
+        }
+        h1 { font-size: 26px; color: #f8fafc; margin-bottom: 4px; }
+        .path {
+            color: #64748b; font-size: 13px;
+            font-family: Consolas, 'Courier New', monospace;
+            margin-bottom: 24px; word-break: break-all;
+        }
+        .toolbar {
+            margin-bottom: 28px; padding-bottom: 20px;
+            border-bottom: 1px solid #1e293b;
+        }
+        .btn {
+            padding: 9px 20px; border: 1px solid #334155; border-radius: 6px;
+            background: #1e293b; color: #e2e8f0;
+            font-family: 'Segoe UI', sans-serif; font-size: 13px;
+            cursor: pointer; margin-right: 6px; margin-bottom: 6px;
+        }
+        .btn:hover { border-color: #38bdf8; color: #38bdf8; }
+        .btn-primary { background: #0369a1; border-color: #0284c7; color: #fff; }
+        .btn-primary:hover { background: #0284c7; color: #fff; }
+        .btn-green { background: #065f46; border-color: #059669; color: #a7f3d0; }
+        .btn-green:hover { background: #059669; color: #fff; }
+        .btn-amber { background: #78350f; border-color: #b45309; color: #fcd34d; }
+        .btn-amber:hover { background: #b45309; color: #fff; }
+        .btn-vscode { background: #1e3a5f; border-color: #2563eb; color: #93c5fd; }
+        .btn-vscode:hover { background: #2563eb; color: #fff; }
+        .btn-back { background: #334155; border-color: #475569; }
+        .section {
+            background: #1e293b; border: 1px solid #334155;
+            border-radius: 8px; padding: 20px 24px; margin-bottom: 16px;
+        }
+        .section h2 {
+            font-size: 16px; color: #38bdf8;
+            margin-bottom: 12px; padding-bottom: 8px;
+            border-bottom: 1px solid #334155;
+        }
+        .dates-row { margin-bottom: 14px; }
+        .date-chip {
+            display: inline-block;
+            background: #0f172a; border: 1px solid #334155;
+            border-radius: 6px; padding: 5px 14px;
+            font-size: 13px; color: #94a3b8;
+            margin-right: 10px; margin-bottom: 6px;
+        }
+        .date-chip b { color: #e2e8f0; }
+        .memo-text {
+            font-size: 15px; color: #f1f5f9;
+            line-height: 1.8; padding: 6px 0;
+        }
+        .info-table { border-collapse: collapse; width: 100%; }
+        .info-table td {
+            padding: 6px 14px; font-size: 13px;
+            border-bottom: 1px solid #0f172a;
+        }
+        .info-table .label { color: #94a3b8; width: 130px; font-weight: 600; }
+        .code-block {
+            background: #0f172a; border: 1px solid #334155;
+            border-radius: 6px; padding: 14px;
+            font-family: Consolas, 'Courier New', monospace;
+            font-size: 13px; color: #cbd5e1;
+            overflow-x: auto; white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 500px; overflow-y: auto;
+        }
+        .readme-block {
+            background: #0f172a; border: 1px solid #334155;
+            border-radius: 6px; padding: 18px;
+            font-family: Consolas, 'Courier New', monospace;
+            font-size: 14px; color: #e2e8f0;
+            line-height: 1.7;
+            overflow-x: auto; white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 500px; overflow-y: auto;
+        }
+        .git-badge {
+            display: inline-block; padding: 4px 12px;
+            border-radius: 10px; font-size: 11px;
+            font-weight: 600; margin-bottom: 14px;
+        }
+        .git-yes { background: #064e3b; color: #6ee7b7; }
+        .git-no { background: #451a03; color: #fdba74; }
+        .section-sub { color: #94a3b8; font-size: 13px; margin: 10px 0 6px 0; }
+        .clean-status { color: #6ee7b7; font-size: 13px; margin-top: 8px; }
+        .muted { color: #64748b; font-style: italic; font-size: 14px; }
+        .toast {
+            position: fixed; bottom: 30px; right: 30px;
+            background: #065f46; color: #6ee7b7;
+            padding: 12px 24px; border-radius: 8px;
+            font-size: 13px; display: none;
+            border: 1px solid #059669; z-index: 9999;
+        }
+        /* --- File Browser --- */
+        .browser-bar {
+            display: flex; align-items: center;
+            margin-bottom: 10px; gap: 8px;
+        }
+        .browser-bar .btn { margin: 0; }
+        .breadcrumb {
+            font-family: Consolas, 'Courier New', monospace;
+            font-size: 13px; color: #94a3b8;
+            flex: 1; overflow: hidden; white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .breadcrumb span {
+            color: #38bdf8; cursor: pointer;
+        }
+        .breadcrumb span:hover { text-decoration: underline; }
+        .browser-list {
+            background: #0f172a; border: 1px solid #334155;
+            border-radius: 6px;
+            max-height: 420px; overflow-y: auto;
+        }
+        .browser-row {
+            display: flex; align-items: center;
+            padding: 6px 14px; font-size: 13px;
+            border-bottom: 1px solid #1a2536;
+            font-family: Consolas, 'Courier New', monospace;
+        }
+        .browser-row:last-child { border-bottom: none; }
+        .browser-row:hover { background: #1e293b; }
+        .browser-row .icon {
+            width: 24px; color: #94a3b8; flex-shrink: 0;
+        }
+        .browser-row .fname {
+            flex: 1; color: #e2e8f0; overflow: hidden;
+            white-space: nowrap; text-overflow: ellipsis;
+        }
+        .browser-row .fname.dir-link {
+            color: #38bdf8; cursor: pointer;
+        }
+        .browser-row .fname.dir-link:hover { text-decoration: underline; }
+        .browser-row .fsize {
+            width: 90px; text-align: right; color: #64748b;
+            flex-shrink: 0; padding-left: 10px;
+        }
+        .browser-row .fdate {
+            width: 150px; text-align: right; color: #475569;
+            flex-shrink: 0; padding-left: 10px;
+        }
+        .browser-count {
+            color: #64748b; font-size: 12px;
+            padding: 6px 14px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>ClipDedent</h1>
+<p class="path">C:\Users\slobodan.krstic\Documents-local\Projects\ClipDedent</p>
+
+<div class="toolbar">
+    <button class="btn btn-primary" onclick="openExplorer()">Open in Explorer</button>
+    <button class="btn btn-vscode" onclick="openVSCode()">Open in VS Code</button>
+    <button class="btn btn-green" onclick="copyPath()">Copy Path</button>
+    <button class="btn btn-amber" onclick="openCMD()">Open CMD</button>
+    <button class="btn btn-amber" onclick="openPS()">Open PowerShell</button>
+    <button class="btn btn-back" onclick="backToIndex()">Back to Index</button>
+</div>
+
+<div class="section">
+    <h2>Folder Contents</h2>
+    <div class="browser-bar">
+        <button class="btn" id="btnUp" onclick="goUp()">Up</button>
+        <button class="btn" onclick="goRoot()">Root</button>
+        <div class="breadcrumb" id="breadcrumb"></div>
+    </div>
+    <div class="browser-list" id="browserList"></div>
+    <div class="browser-count" id="browserCount"></div>
+</div>
+
+<div class="section">
+    <h2>Project Summary</h2>
+    <div class="dates-row">
+            <span class="date-chip">Created: <b>2026-04-14</b> (13 days ago)</span>
+            <span class="date-chip">Last Modified: <b>2026-04-14</b> (13 days ago)</span>
+        </div>
+        <p class="memo-text">ClipDedent is a small zero-dependency Python utility that runs silently in the background on Windows and cleans clipboard indentation on the fly. The main file (clipdedent.pyw) registers a global Ctrl+Shift+V hotkey via the Windows API (RegisterHotKey on user32.dll); when triggered, it reads the clipboard via the FileSystemObject-style clipboard API (OpenClipboard/GetClipboardData with CF_UNICODETEXT), runs textwrap.dedent plus per-line right-strip on the content, writes the cleaned text back to the clipboard, and simulates a Ctrl+V keystroke into the foreground window using keybd_event. A second hotkey, Ctrl+Shift+Q, terminates the process cleanly. The implementation uses only the Python standard library plus ctypes calls into user32 and kernel32 — no third-party packages are needed. Helper files include add-to-startup.bat (drops a startup shortcut), run-background.vbs (silent .pyw launcher), and run-console.bat (runs with python.exe so log() output is visible). Ctypes argtypes are explicitly declared for the clipboard and hotkey functions; keybd_event and MessageBeep are intentionally left without argtypes to avoid 64-bit ULONG_PTR marshaling issues. The project lives in a single 7.5 KB script and was iterated on April 14, 2026 — created the same day as the broader Projects index dashboard. It is intended as a launchpad for a small multi-tool utility app aimed at daily-driver clipboard workflow improvements.</p>
+</div>
+
+<div class="section">
+    <h2>Git Repository</h2>
+    <span class="git-badge git-no">No Git Repository</span>
+</div>
+
+<div class="section">
+    <h2>README Preview</h2>
+    <p class="muted">No README file found in this project.</p>
+</div>
+
+<div class="toast" id="toast">Path copied to clipboard!</div>
+
+<script>
+    var FOLDER = 'C:\\Users\\slobodan.krstic\\Documents-local\\Projects\\ClipDedent';
+    var INDEX  = 'C:\\Users\\slobodan.krstic\\Documents-local\\Projects\\index.hta';
+    var currentDir = FOLDER;
+    var fso = new ActiveXObject('Scripting.FileSystemObject');
+
+    function formatSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+
+    function formatDate(d) {
+        var y = d.getFullYear();
+        var m = ('0' + (d.getMonth() + 1)).slice(-2);
+        var day = ('0' + d.getDate()).slice(-2);
+        var h = ('0' + d.getHours()).slice(-2);
+        var min = ('0' + d.getMinutes()).slice(-2);
+        return y + '-' + m + '-' + day + ' ' + h + ':' + min;
+    }
+
+    function escHtml(s) {
+        return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // Store directory names so we can reference by index (avoids quote escaping hell)
+    var currentDirs = [];
+    var breadcrumbPaths = [];
+
+    function browse(path) {
+        currentDir = path;
+        currentDirs = [];
+        var list = document.getElementById('browserList');
+        var countEl = document.getElementById('browserCount');
+        var html = '';
+        var dirCount = 0, fileCount = 0;
+
+        try {
+            var folder = fso.GetFolder(path);
+            var dirs = new Enumerator(folder.SubFolders);
+            var dirArr = [];
+            for (; !dirs.atEnd(); dirs.moveNext()) {
+                var d = dirs.item();
+                dirArr.push({ name: d.Name, date: new Date(d.DateLastModified) });
+            }
+            dirArr.sort(function(a,b) { return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1; });
+
+            for (var i = 0; i < dirArr.length; i++) {
+                currentDirs.push(dirArr[i].name);
+                var dn = escHtml(dirArr[i].name);
+                var dd = formatDate(dirArr[i].date);
+                html += '<div class="browser-row">'
+                    + '<span class="icon">&#128193;</span>'
+                    + '<span class="fname dir-link" data-idx="' + dirCount + '">' + dn + '/</span>'
+                    + '<span class="fsize"></span>'
+                    + '<span class="fdate">' + dd + '</span>'
+                    + '</div>';
+                dirCount++;
+            }
+
+            var files = new Enumerator(folder.Files);
+            var fileArr = [];
+            for (; !files.atEnd(); files.moveNext()) {
+                var f = files.item();
+                if (f.Name === 'project-detail.hta') continue;
+                fileArr.push({ name: f.Name, size: f.Size, date: new Date(f.DateLastModified) });
+            }
+            fileArr.sort(function(a,b) { return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1; });
+
+            for (var j = 0; j < fileArr.length; j++) {
+                fileCount++;
+                var fn = escHtml(fileArr[j].name);
+                var fs = formatSize(fileArr[j].size);
+                var fd = formatDate(fileArr[j].date);
+                html += '<div class="browser-row">'
+                    + '<span class="icon">&#128196;</span>'
+                    + '<span class="fname">' + fn + '</span>'
+                    + '<span class="fsize">' + fs + '</span>'
+                    + '<span class="fdate">' + fd + '</span>'
+                    + '</div>';
+            }
+        } catch(e) {
+            html = '<div class="browser-row"><span style="color:#f87171;">Error: ' + e.message + '</span></div>';
+        }
+
+        list.innerHTML = html;
+        countEl.innerText = (dirCount + fileCount) + ' items (' + dirCount + ' folders, ' + fileCount + ' files)';
+        updateBreadcrumb();
+        document.getElementById('btnUp').disabled = (currentDir.toLowerCase() === FOLDER.toLowerCase());
+    }
+
+    // Event delegation: handle clicks on folder names and breadcrumbs
+    document.onclick = function(e) {
+        var el = e.srcElement || e.target;
+        // Click on a folder in the listing
+        if (el.getAttribute('data-idx') !== null) {
+            var idx = parseInt(el.getAttribute('data-idx'), 10);
+            if (idx >= 0 && idx < currentDirs.length) {
+                browse(currentDir + '\\' + currentDirs[idx]);
+            }
+            return;
+        }
+        // Click on a breadcrumb segment
+        if (el.getAttribute('data-bc') !== null) {
+            var bcIdx = parseInt(el.getAttribute('data-bc'), 10);
+            if (bcIdx >= 0 && bcIdx < breadcrumbPaths.length) {
+                browse(breadcrumbPaths[bcIdx]);
+            }
+            return;
+        }
+    };
+
+    function updateBreadcrumb() {
+        var bc = document.getElementById('breadcrumb');
+        breadcrumbPaths = [FOLDER];
+        var rel = currentDir;
+        if (rel.toLowerCase().indexOf(FOLDER.toLowerCase()) === 0) {
+            rel = rel.substring(FOLDER.length);
+        }
+        if (rel.charAt(0) === '\\') rel = rel.substring(1);
+
+        var parts = rel ? rel.split('\\') : [];
+        var html = '<span data-bc="0">ROOT</span>';
+        var built = FOLDER;
+        for (var i = 0; i < parts.length; i++) {
+            built += '\\' + parts[i];
+            breadcrumbPaths.push(built);
+            html += ' \\ <span data-bc="' + (i + 1) + '">' + escHtml(parts[i]) + '</span>';
+        }
+        bc.innerHTML = html;
+    }
+
+    function goUp() {
+        if (currentDir.toLowerCase() === FOLDER.toLowerCase()) return;
+        var parent = fso.GetParentFolderName(currentDir);
+        if (parent.length >= FOLDER.length) browse(parent);
+    }
+
+    function goRoot() { browse(FOLDER); }
+
+    function openExplorer() {
+        var sh = new ActiveXObject('WScript.Shell');
+        sh.Run('explorer.exe "' + FOLDER + '"');
+    }
+    function openVSCode() {
+        var sh = new ActiveXObject('WScript.Shell');
+        sh.Run('cmd /c code "' + FOLDER + '"', 0, false);
+    }
+    function copyPath() {
+        window.clipboardData.setData('Text', FOLDER);
+        var t = document.getElementById('toast');
+        t.style.display = 'block';
+        setTimeout(function() { t.style.display = 'none'; }, 2000);
+    }
+    function openCMD() {
+        var sh = new ActiveXObject('WScript.Shell');
+        sh.Run('cmd /k cd /d "' + FOLDER + '"');
+    }
+    function openPS() {
+        var sh = new ActiveXObject('WScript.Shell');
+        sh.Run('powershell -NoExit -Command "Set-Location \'' + FOLDER + '\'"');
+    }
+    function backToIndex() {
+        var sh = new ActiveXObject('WScript.Shell');
+        sh.Run('mshta.exe "' + INDEX + '"');
+        window.close();
+    }
+
+    // Load initial listing
+    browse(FOLDER);
+</script>
+
+</body>
+</html>
